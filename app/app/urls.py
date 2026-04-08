@@ -26,4 +26,5 @@ urlpatterns = [
         name="apidocs",
     ),
     path("api/user/", include("user.urls")),
+    path("api/recipe/", include("recipe.urls")),
 ]
