@@ -12,10 +12,12 @@ EXPOSE 8000
 ARG DEV=false
 RUN python -m  venv /py && \
     /py/bin/pip install --upgrade pip && \
-    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache postgresql-client jpeg-dev && \
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base \
         postgresql-dev \
+        zlib \
+        zlib-dev \
         musl-dev && \
     /py/bin/pip install -r /tmp/requirements.txt && \
     if [ "$DEV" = "true" ]; \
@@ -26,8 +28,12 @@ RUN python -m  venv /py && \
     adduser \
        --disabled-password \
        --no-create-home \
-       django-user
-
+       django-user && \
+    mkdir -p /vol/web/media && \
+    mkdir -p /vol/web/static && \
+    chown -R django-user:django-user /vol && \
+    chmod -R 755 /vol && \
+    chmod -R 775 /vol/web/media
 
 ENV PATH="/py/bin:$PATH"
 
